@@ -4,23 +4,28 @@
 > skip its reporting and review items.
 
 <!-- agents-standard:start v1 -->
+
 ## Standardní pravidla (v1)
+
 Kanonická verze je `AGENTS-STANDARD.md` v repu `thetedotgg/projects-meta`; tento blok neuprav lokálně.
 Platí pro každé zadání, i když ho zadání neopakuje. Při rozporu má přednost pravidlo z části
 „Projektová pravidla“; uplatněný rozpor uveď v bodě 5 reportu.
 
 ### Začátek úkolu
+
 - Nejdřív vypiš, co máš k dispozici (CLI, přihlášení, klíče, MCP, prohlížeč, zařízení, přístup
   na server) a co pro úkol chybí; u klíčů a tajemství jen název a dostupnost, nikdy hodnotu.
   Chybějící přístup nenahrazuj odhadem ani simulací.
 
 ### Nic nezahazovat
+
 - Nemaž ani nepřepisuj necommitnuté změny, cizí práci, worktrees, větve ani data. Bez výslovného
   pokynu žádný force-push, `reset --hard`, `stash`, `clean`, přepis historie ani mazání větví;
   souběžnou práci izoluj v novém worktree.
 - Tajemství, klíče a klientská data nepatří do kódu, commitů, logů, screenshotů ani reportu.
 
 ### Jen se schválením uživatele
+
 - Zveřejnění repa nebo změna jeho viditelnosti, změny DNS, produkční nasazení, nahrání do obchodů
   (Google Play, App Store a podobné), platby a placené objednávky.
 - Commit a push jen když je povoluje zadání nebo projektové pravidlo; jinak změny jen připrav a popiš.
@@ -28,7 +33,9 @@ Platí pro každé zadání, i když ho zadání neopakuje. Při rozporu má př
   skript nebo kliknutí). Ten krok napiš do bodu 4 reportu a neproveď ho bez schválení.
 
 ### Weby
+
 Platí pro projekty s webovým rozhraním; jinde se neuplatní a nehlásí se jako rozpor.
+
 - Čeština i angličtina s přirozeným textem v obou jazycích (žádný strojový překlad); texty,
   metadata a přístupné popisky v obou jazycích ve stejné změně.
 - Rychlé i na starších telefonech: malé bundly, líné načítání médií, ověření na zpomaleném CPU
@@ -36,15 +43,22 @@ Platí pro projekty s webovým rozhraním; jinde se neuplatní a nehlásí se ja
 - Před předáním dodej náhledy (screenshoty) pro mobil i desktop; odkazy na ně dej do bodu 3 reportu.
 
 ### Před PR
+
 - Před otevřením PR nebo předáním změny k PR (nebo před pushem do hlavní větve tam, kde se PR nepoužívá) nech diff posoudit modelem
   Fable; v Claude Code je to read-only subagent `ts-advisor`. Nálezy oprav nebo uveď v bodě 5.
   Když Fable není dostupný, review nepředstírej a napiš to do bodu 6.
 
 ### Závěrečný report (česky)
+
 Vždy v tomto pořadí; krátké odrážky, prázdný bod = „nic“, odkazy jako cesty nebo URL:
-1) Hotovo · 2) Výsledky kontrol (testy, lint, typecheck, build, QA s výsledkem; nespuštěné označ) ·
-3) Odkazy (soubory, náhledy, PR, preview URL) · 4) Co schválit (včetně kroku nasazení) ·
-5) Rizika (včetně uplatněných rozporů se standardem) · 6) Co chybělo v zadání nebo prostředí.
+
+1. Hotovo
+2. Výsledky kontrol (testy, lint, typecheck, build, QA s výsledkem; nespuštěné označ)
+3. Odkazy (soubory, náhledy, PR, preview URL)
+4. Co schválit (včetně kroku nasazení)
+5. Rizika (včetně uplatněných rozporů se standardem)
+6. Co chybělo v zadání nebo prostředí
+
 <!-- agents-standard:end -->
 
 ## Projektová pravidla

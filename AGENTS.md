@@ -49,6 +49,10 @@ Vždy v tomto pořadí; krátké odrážky, prázdný bod = „nic“, odkazy ja
 
 ## Projektová pravidla
 
+Odchylky od standardu:
+- Kořenový `CLAUDE.md` (`@AGENTS.md`) v repu záměrně není: bezpečnostní skener Hermes ho při instalaci
+  pluginu hodnotí jako CRITICAL „persistence“ a instalaci zablokuje (`tests/test_supported_install.py`).
+
 Veřejný plugin pro Hermes (Python, licence MIT), který umožňuje sledovat a řídit úlohy T3 z Hermes:
 nástroje `t3_threads`, `t3_thread_create`, `t3_thread_send` a další (`plugin.yaml`).
 Aktuální verze je v `plugin.yaml`, podporované verze Hermes v `README.md`. Závislost `websockets>=15,<16`.

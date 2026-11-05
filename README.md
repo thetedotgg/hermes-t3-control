@@ -10,7 +10,7 @@ Check on your T3 coding tasks and continue them from Hermes. You can review prog
 
 ## 1. Install
 
-[Download `install-t3.sh`](https://github.com/thetasigmaio/hermes-t3-control/releases/download/v1.5.0/install-t3.sh), open a Linux terminal in the downloaded file's folder, and run:
+[Download `install-t3.sh`](https://github.com/thetedotgg/hermes-t3-control/releases/download/v1.5.0/install-t3.sh), open a Linux terminal in the downloaded file's folder, and run:
 
 ```bash
 bash install-t3.sh

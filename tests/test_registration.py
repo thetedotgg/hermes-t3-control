@@ -416,7 +416,7 @@ class RegistrationTests(unittest.TestCase):
         )
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(
-            manifest["homepage"], "https://github.com/thetasigmaio/hermes-t3-control"
+            manifest["homepage"], "https://github.com/thetedotgg/hermes-t3-control"
         )
         self.assertEqual(tuple(manifest["provides_tools"]), EXPECTED_TOOLS)
         self.assertEqual(manifest["python_dependencies"], ["websockets>=15,<16"])

@@ -64,7 +64,7 @@ Verify the release tag against the pinned signer, confirm the active profile, th
     env -i PATH="$PATH" LC_ALL=C HOME="$VERIFY_DIR/home" XDG_CONFIG_HOME="$VERIFY_DIR/xdg" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null git "$@"
   }
   safe_git -C "$VERIFY_DIR/repo" init -q
-  safe_git -C "$VERIFY_DIR/repo" -c protocol.file.allow=never fetch -q --no-tags https://github.com/thetasigmaio/hermes-t3-control.git 'refs/tags/v1.5.0:refs/tags/v1.5.0'
+  safe_git -C "$VERIFY_DIR/repo" -c protocol.file.allow=never fetch -q --no-tags https://github.com/thetedotgg/hermes-t3-control.git 'refs/tags/v1.5.0:refs/tags/v1.5.0'
   test "$(safe_git -C "$VERIFY_DIR/repo" cat-file -t refs/tags/v1.5.0)" = tag
   test "$(safe_git -C "$VERIFY_DIR/repo" for-each-ref --format='%(tag)' refs/tags/v1.5.0)" = v1.5.0
   TAG_VERIFY="$(safe_git -C "$VERIFY_DIR/repo" -c gpg.format=ssh -c gpg.ssh.allowedSignersFile=/dev/null verify-tag --raw v1.5.0 2>&1 || true)"
@@ -76,7 +76,7 @@ Verify the release tag against the pinned signer, confirm the active profile, th
   printf '%s\n' "$HERMES_T3_CONTROL_REF" | grep -Eq '^[0-9a-f]{40}$'
   hermes plugins disable hermes-t3-control
   hermes plugins remove hermes-t3-control
-  hermes plugins install thetasigmaio/hermes-t3-control --ref "$HERMES_T3_CONTROL_REF" --no-enable
+  hermes plugins install thetedotgg/hermes-t3-control --ref "$HERMES_T3_CONTROL_REF" --no-enable
   hermes plugins doctor hermes-t3-control --ci
   hermes plugins enable hermes-t3-control --no-allow-tool-override
 )
@@ -113,7 +113,7 @@ The downloaded checksum alone is not authenticity proof. This private, HTTPS-onl
     env -i PATH="$PATH" LC_ALL=C HOME="$RELEASE_DIR/home" XDG_CONFIG_HOME="$RELEASE_DIR/xdg" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null git "$@"
   }
   safe_git -C "$RELEASE_DIR/repo" init -q
-  safe_git -C "$RELEASE_DIR/repo" -c protocol.file.allow=never fetch -q --no-tags https://github.com/thetasigmaio/hermes-t3-control.git 'refs/tags/v1.5.0:refs/tags/v1.5.0'
+  safe_git -C "$RELEASE_DIR/repo" -c protocol.file.allow=never fetch -q --no-tags https://github.com/thetedotgg/hermes-t3-control.git 'refs/tags/v1.5.0:refs/tags/v1.5.0'
   test "$(safe_git -C "$RELEASE_DIR/repo" cat-file -t refs/tags/v1.5.0)" = tag
   test "$(safe_git -C "$RELEASE_DIR/repo" for-each-ref --format='%(tag)' refs/tags/v1.5.0)" = v1.5.0
   TAG_VERIFY="$(safe_git -C "$RELEASE_DIR/repo" -c gpg.format=ssh -c gpg.ssh.allowedSignersFile=/dev/null verify-tag --raw v1.5.0 2>&1 || true)"
@@ -125,10 +125,10 @@ The downloaded checksum alone is not authenticity proof. This private, HTTPS-onl
   printf '%s\n' "$RELEASE_REF" | grep -Eq '^[0-9a-f]{40}$'
   safe_git -C "$RELEASE_DIR/repo" checkout -q --detach "$RELEASE_REF"
   safe_git -C "$RELEASE_DIR/repo" show "$RELEASE_REF:release/v1.5.0.sha256" > "$RELEASE_DIR/authenticated.sha256"
-  curl --fail --show-error --location --proto '=https' --proto-redir '=https' --output "$RELEASE_DIR/download/hermes-t3-control-1.5.0.tar.gz" https://github.com/thetasigmaio/hermes-t3-control/releases/download/v1.5.0/hermes-t3-control-1.5.0.tar.gz
-  curl --fail --show-error --location --proto '=https' --proto-redir '=https' --output "$RELEASE_DIR/download/hermes-t3-control-1.5.0.tar.gz.sha256" https://github.com/thetasigmaio/hermes-t3-control/releases/download/v1.5.0/hermes-t3-control-1.5.0.tar.gz.sha256
-  curl --fail --show-error --location --proto '=https' --proto-redir '=https' --output "$RELEASE_DIR/download/install-t3.sh" https://github.com/thetasigmaio/hermes-t3-control/releases/download/v1.5.0/install-t3.sh
-  curl --fail --show-error --location --proto '=https' --proto-redir '=https' --output "$RELEASE_DIR/download/install-t3.sh.sha256" https://github.com/thetasigmaio/hermes-t3-control/releases/download/v1.5.0/install-t3.sh.sha256
+  curl --fail --show-error --location --proto '=https' --proto-redir '=https' --output "$RELEASE_DIR/download/hermes-t3-control-1.5.0.tar.gz" https://github.com/thetedotgg/hermes-t3-control/releases/download/v1.5.0/hermes-t3-control-1.5.0.tar.gz
+  curl --fail --show-error --location --proto '=https' --proto-redir '=https' --output "$RELEASE_DIR/download/hermes-t3-control-1.5.0.tar.gz.sha256" https://github.com/thetedotgg/hermes-t3-control/releases/download/v1.5.0/hermes-t3-control-1.5.0.tar.gz.sha256
+  curl --fail --show-error --location --proto '=https' --proto-redir '=https' --output "$RELEASE_DIR/download/install-t3.sh" https://github.com/thetedotgg/hermes-t3-control/releases/download/v1.5.0/install-t3.sh
+  curl --fail --show-error --location --proto '=https' --proto-redir '=https' --output "$RELEASE_DIR/download/install-t3.sh.sha256" https://github.com/thetedotgg/hermes-t3-control/releases/download/v1.5.0/install-t3.sh.sha256
   grep '  hermes-t3-control-1.5.0.tar.gz$' "$RELEASE_DIR/authenticated.sha256" > "$RELEASE_DIR/expected.sha256"
   cmp -- "$RELEASE_DIR/expected.sha256" "$RELEASE_DIR/download/hermes-t3-control-1.5.0.tar.gz.sha256"
   (cd "$RELEASE_DIR/download" && python3 -B "$RELEASE_DIR/repo/scripts/verify_release.py" hermes-t3-control-1.5.0.tar.gz.sha256)

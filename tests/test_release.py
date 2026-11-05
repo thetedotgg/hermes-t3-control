@@ -192,7 +192,7 @@ class ReleaseMetadataTests(unittest.TestCase):
         self.assertEqual(manifest["license"], "MIT")
         self.assertEqual(
             manifest["homepage"],
-            "https://github.com/thetasigmaio/hermes-t3-control",
+            "https://github.com/thetedotgg/hermes-t3-control",
         )
         self.assertIn("## [1.5.0] - 2026-09-13", changelog)
         self.assertIn("v1.5.0/install-t3.sh", readme)

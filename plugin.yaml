@@ -6,7 +6,7 @@
   "description": "Control T3 work from Hermes with bounded tools and operation-scoped local authentication; core thread lifecycle verified end-to-end with Codex.",
   "author": "Jakub Sladek",
   "license": "MIT",
-  "homepage": "https://github.com/thetasigmaio/hermes-t3-control",
+  "homepage": "https://github.com/thetedotgg/hermes-t3-control",
   "kind": "standalone",
   "requires_env": [],
   "provides_tools": [

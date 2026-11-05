@@ -28,7 +28,7 @@ The detached checksum detects corruption but is not an authenticity proof by its
   }
   safe_git -C "$RELEASE_DIR/repo" init -q
   safe_git -C "$RELEASE_DIR/repo" -c protocol.file.allow=never fetch -q \
-    --no-tags https://github.com/thetasigmaio/hermes-t3-control.git \
+    --no-tags https://github.com/thetedotgg/hermes-t3-control.git \
     'refs/tags/v1.5.0:refs/tags/v1.5.0'
   test "$(safe_git -C "$RELEASE_DIR/repo" cat-file -t refs/tags/v1.5.0)" = tag
   test "$(safe_git -C "$RELEASE_DIR/repo" for-each-ref --format='%(tag)' refs/tags/v1.5.0)" = v1.5.0
@@ -45,10 +45,10 @@ The detached checksum detects corruption but is not an authenticity proof by its
     "$RELEASE_REF:release/v1.5.0.sha256" > "$RELEASE_DIR/authenticated.sha256"
   curl --fail --silent --show-error --location --proto '=https' \
     --proto-redir '=https' -o "$RELEASE_DIR/hermes-gateway-continuation-1.5.0.patch" \
-    https://github.com/thetasigmaio/hermes-t3-control/releases/download/v1.5.0/hermes-gateway-continuation-1.5.0.patch
+    https://github.com/thetedotgg/hermes-t3-control/releases/download/v1.5.0/hermes-gateway-continuation-1.5.0.patch
   curl --fail --silent --show-error --location --proto '=https' \
     --proto-redir '=https' -o "$RELEASE_DIR/hermes-gateway-continuation-1.5.0.patch.sha256" \
-    https://github.com/thetasigmaio/hermes-t3-control/releases/download/v1.5.0/hermes-gateway-continuation-1.5.0.patch.sha256
+    https://github.com/thetedotgg/hermes-t3-control/releases/download/v1.5.0/hermes-gateway-continuation-1.5.0.patch.sha256
   grep '  hermes-gateway-continuation-1.5.0.patch$' \
     "$RELEASE_DIR/authenticated.sha256" > "$RELEASE_DIR/expected.sha256"
   cmp -- "$RELEASE_DIR/expected.sha256" "$RELEASE_DIR/hermes-gateway-continuation-1.5.0.patch.sha256"

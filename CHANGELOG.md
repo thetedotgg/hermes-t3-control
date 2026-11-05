@@ -143,14 +143,14 @@ All notable changes to Hermes T3 Control are documented in this file.
 - Rejects active-token reflection in request targets or mutation data before any HTTP request.
 - Publishes release artifacts through owner-private, inode-bound no-follow staging and rejects unsafe directories, links, or special files.
 
-[1.4.0]: https://github.com/thetasigmaio/hermes-t3-control/releases/tag/v1.4.0
-[1.3.1]: https://github.com/thetasigmaio/hermes-t3-control/releases/tag/v1.3.1
-[1.3.0]: https://github.com/thetasigmaio/hermes-t3-control/releases/tag/v1.3.0
-[1.2.3]: https://github.com/thetasigmaio/hermes-t3-control/releases/tag/v1.2.3
-[1.2.2]: https://github.com/thetasigmaio/hermes-t3-control/releases/tag/v1.2.2
-[1.2.1]: https://github.com/thetasigmaio/hermes-t3-control/releases/tag/v1.2.1
-[1.2.0]: https://github.com/thetasigmaio/hermes-t3-control/releases/tag/v1.2.0
-[1.1.1]: https://github.com/thetasigmaio/hermes-t3-control/releases/tag/v1.1.1
-[1.1.0]: https://github.com/thetasigmaio/hermes-t3-control/releases/tag/v1.1.0
+[1.4.0]: https://github.com/thetedotgg/hermes-t3-control/releases/tag/v1.4.0
+[1.3.1]: https://github.com/thetedotgg/hermes-t3-control/releases/tag/v1.3.1
+[1.3.0]: https://github.com/thetedotgg/hermes-t3-control/releases/tag/v1.3.0
+[1.2.3]: https://github.com/thetedotgg/hermes-t3-control/releases/tag/v1.2.3
+[1.2.2]: https://github.com/thetedotgg/hermes-t3-control/releases/tag/v1.2.2
+[1.2.1]: https://github.com/thetedotgg/hermes-t3-control/releases/tag/v1.2.1
+[1.2.0]: https://github.com/thetedotgg/hermes-t3-control/releases/tag/v1.2.0
+[1.1.1]: https://github.com/thetedotgg/hermes-t3-control/releases/tag/v1.1.1
+[1.1.0]: https://github.com/thetedotgg/hermes-t3-control/releases/tag/v1.1.0
 
-[1.5.0]: https://github.com/thetasigmaio/hermes-t3-control/releases/tag/v1.5.0
+[1.5.0]: https://github.com/thetedotgg/hermes-t3-control/releases/tag/v1.5.0

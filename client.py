@@ -17,6 +17,15 @@ from typing import Any
 from urllib.parse import parse_qsl, quote, urlencode, urlsplit
 
 
+# T3 server >=0.1.x versions the orchestration HTTP contract and requires this
+# header on every authenticated orchestration request (shell snapshot, thread
+# snapshot/transcript, dispatch). It is reported back as `orchestrationProtocolVersion`
+# in the unauthenticated environment descriptor; T3 has shipped only protocol "2"
+# so far. A request missing the header fails the server's Effect-Schema
+# validation before the handler runs and returns an empty-body HTTP 400.
+ORCHESTRATION_PROTOCOL_HEADER = "x-t3-orchestration-protocol"
+ORCHESTRATION_PROTOCOL_VERSION = "2"
+
 MAX_BASE_URL_CHARS = 2_048
 MAX_TOKEN_CHARS = 16_384
 MAX_IDENTIFIER_CHARS = 512
@@ -329,7 +338,7 @@ def validate_shell_snapshot(value: Any) -> dict[str, Any]:
     _nonnegative_int(root, "snapshotSequence", "shell")
     projects = _list(root, "projects", "shell")
     threads = _list(root, "threads", "shell")
-    _timestamp(root, "updatedAt", "shell")
+    _optional_timestamp(root, "updatedAt", "shell")
     for index, project in enumerate(projects):
         _validate_project(project, f"shell.projects[{index}]")
     for index, thread in enumerate(threads):
@@ -415,8 +424,82 @@ def _validate_model_selection(value: Any, path: str) -> None:
                 )
 
 
+# T3 server >=0.1.x flattened the old per-thread `session` object and the
+# `latestTurn` object into top-level thread fields (`status`, `activeRunId`,
+# `latestRunId`, `latestRun*At`, ...). `thread.status` is exactly the stored
+# run's status verbatim (server's own `shellStatusFromStoredRunStatus`:
+# null -> "idle", else the run status unchanged: preparing/queued/starting/
+# running/waiting/completed/interrupted/failed/cancelled/rolled_back).
+# This plugin's validator and its mutation-safety checks (tools.py) were
+# written against the older nested shape. Rather than loosen validation and
+# risk a mutation tool misreading thread liveness, synthesize the legacy
+# `session`/`latestTurn` objects from the new flat fields so the exact same
+# downstream logic runs unchanged against either server generation. When in
+# doubt about a mapping, bias toward treating the thread as busy/erroring
+# (never silently "idle") so mutation guards stay conservative.
+_RUN_STATUS_TO_SESSION_STATUS = {
+    "idle": "idle",
+    "preparing": "starting",
+    "queued": "starting",
+    "starting": "starting",
+    "running": "running",
+    "waiting": "running",
+    "completed": "ready",
+    "interrupted": "interrupted",
+    "cancelled": "stopped",
+    "failed": "error",
+    "rolled_back": "error",
+}
+_RUN_STATUS_TO_TURN_STATE = {
+    "preparing": "running",
+    "queued": "running",
+    "starting": "running",
+    "running": "running",
+    "waiting": "running",
+    "completed": "completed",
+    "interrupted": "interrupted",
+    "cancelled": "error",
+    "failed": "error",
+    "rolled_back": "error",
+}
+
+
+def _normalize_flat_thread_wire_shape(thread: dict[str, Any]) -> None:
+    """Backfill legacy `session`/`latestTurn` sub-objects, mutating in place.
+
+    No-op against a server that still sends the nested shape (``"session"``
+    already present). Safe to call unconditionally before validation.
+    """
+    if "session" in thread or "latestTurn" in thread:
+        return
+    if "status" not in thread or "runtimeMode" not in thread:
+        return
+    run_status = thread.get("status")
+    run_status_key = run_status if isinstance(run_status, str) else None
+    thread["session"] = {
+        "threadId": thread.get("id"),
+        "status": _RUN_STATUS_TO_SESSION_STATUS.get(run_status_key or "", "error"),
+        "providerName": thread.get("providerInstanceId"),
+        "providerInstanceId": thread.get("providerInstanceId"),
+        "runtimeMode": thread.get("runtimeMode"),
+        "activeTurnId": thread.get("activeRunId"),
+        "lastError": thread.get("lastError"),
+        "updatedAt": thread.get("updatedAt"),
+    }
+    latest_run_id = thread.get("latestRunId")
+    thread["latestTurn"] = None if latest_run_id is None else {
+        "turnId": latest_run_id,
+        "state": _RUN_STATUS_TO_TURN_STATE.get(run_status_key or "", "error"),
+        "requestedAt": thread.get("latestRunRequestedAt"),
+        "startedAt": thread.get("latestRunStartedAt"),
+        "completedAt": thread.get("latestRunCompletedAt"),
+        "assistantMessageId": None,
+    }
+
+
 def _validate_thread(value: Any, path: str, *, detail: bool) -> None:
     thread = _object(value, path)
+    _normalize_flat_thread_wire_shape(thread)
     thread_id = _nonempty_string(thread, "id", path)
     for field in ("projectId", "title"):
         _nonempty_string(thread, field, path)
@@ -642,6 +725,18 @@ def _timestamp(obj: Mapping[str, Any], field: str, path: str) -> str:
     if parsed.utcoffset() is None:
         raise ResponseSchemaError(f"{path}.{field} must be an RFC 3339 timestamp.")
     return value
+
+
+def _optional_timestamp(obj: Mapping[str, Any], field: str, path: str) -> str | None:
+    """Validate an RFC 3339 timestamp only when the field is actually present.
+
+    T3 server >=0.1.x dropped the root-level `updatedAt` on the shell snapshot
+    in favor of the `snapshotSequence` cursor; older nightly builds sent it.
+    Treat it as optional so this plugin works against both generations.
+    """
+    if field not in obj:
+        return None
+    return _timestamp(obj, field, path)
 
 
 def _nullable_timestamp(obj: Mapping[str, Any], field: str, path: str) -> str | None:
@@ -1218,6 +1313,15 @@ class T3Client:
             }
             if _send_authorization:
                 headers["Authorization"] = f"Bearer {self.token}"
+                # T3's orchestration HTTP API (server >=0.1.x) validates every
+                # authenticated orchestration request against a required
+                # `x-t3-orchestration-protocol` header matching the server's
+                # advertised orchestrationProtocolVersion (currently "2"). A
+                # request missing this header fails schema validation with an
+                # empty-body 400 before it ever reaches handler code — this
+                # plugin was built against an older T3 server generation that
+                # did not require it. See docs/t3-protocol-header.md.
+                headers[ORCHESTRATION_PROTOCOL_HEADER] = ORCHESTRATION_PROTOCOL_VERSION
             if body is not None:
                 headers["Content-Type"] = "application/json"
             if _on_request_attempt is not None:

@@ -9,6 +9,13 @@
   "homepage": "https://github.com/thetasigmaio/hermes-t3-control",
   "kind": "standalone",
   "requires_env": [],
+  "optional_env": [
+    {
+      "name": "T3_ORCHESTRATION_TOKEN",
+      "description": "Bearer token for external-token auth mode (macOS/Windows, where local-cli's /proc-based discovery is unavailable). Mint it with `t3 auth session issue --scope orchestration:read --scope orchestration:operate --ttl <duration> --token-only`.",
+      "password": true
+    }
+  ],
   "provides_tools": [
     "t3_threads",
     "t3_thread_read",

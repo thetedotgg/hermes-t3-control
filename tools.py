@@ -1686,7 +1686,7 @@ def t3_threads(ctx: Any, raw_args: Any) -> dict[str, Any]:
         return _apply_model_projection_budget({
             "view": "compact",
             "snapshot_sequence": shell["snapshotSequence"],
-            "updated_at": shell["updatedAt"],
+            "updated_at": shell.get("updatedAt"),
             "project_count": len(matching_projects),
             "projects_truncated": len(matching_projects) > limit,
             "projects": [
